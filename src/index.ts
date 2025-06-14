@@ -77,4 +77,17 @@ app.put("/posts/:id", async (c) => {
 	return c.json(blogPosts[index]);
 });
 
+// ブログ記事を削除する
+app.delete("/posts/:id", async (c) => {
+	const id = c.req.param("id");
+	const index = blogPosts.findIndex((p) => p.id === Number.parseInt(id));
+	if (index === -1) {
+		return c.json({ message: "Post not found" }, 404);
+	}
+
+	blogPosts = blogPosts.filter((p) => p.id !== Number.parseInt(id));
+
+	return c.json({ message: "Post deleted" }, 204);
+});
+
 export default app;

@@ -35,5 +35,17 @@ app.get('/posts', (c) => {
 })
 
 
+// 個別のブログ記事を取得する
+app.get("/posts/:id", (c)=>{
+  const id = c.req.param('id')
+  const post = blogPosts.find((p) => p.id === parseInt(id))
+
+  if(post) {
+    return c.json({title:post.title})
+  }else {
+    return c.json({message: '記事が見つかりませんでした。'}, 404)
+  }
+
+})
 
 export default app

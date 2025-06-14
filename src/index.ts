@@ -63,4 +63,18 @@ app.post("/posts", async (c) => {
 	return c.json({ post: newPost }, 201);
 });
 
+// ブログ記事を更新する
+app.put("/posts/:id", async (c) => {
+	const id = c.req.param("id");
+	const index = blogPosts.findIndex((p) => p.id === Number.parseInt(id));
+	if (index === -1) {
+		return c.json({ message: "Post not found" }, 404);
+	}
+
+	const { title, content } = await c.req.json();
+	blogPosts[index] = { ...blogPosts[index], title, content };
+
+	return c.json(blogPosts[index]);
+});
+
 export default app;

@@ -3,8 +3,14 @@ import { prettyJSON } from "hono/pretty-json";
 
 const app = new Hono();
 
+interface BlogPost {
+	id: number;
+	title: string;
+	content: string;
+}
+
 // 仮のブログ記事データ
-const blogPosts = [
+let blogPosts: BlogPost[] = [
 	{
 		id: 1,
 		title: "ブログ記事1",
@@ -43,6 +49,18 @@ app.get("/posts/:id", (c) => {
 		return c.json({ title: post.title });
 	}
 	return c.json({ message: "記事が見つかりませんでした。" }, 404);
+});
+
+// ブログを作成する
+app.post("/posts", async (c) => {
+	const { title, content } = await c.req.json<{ title: string; content: string }>();
+	const newPost = {
+		id: blogPosts.length + 1,
+		title,
+		content,
+	};
+	blogPosts = [...blogPosts, newPost];
+	return c.json({ post: newPost }, 201);
 });
 
 export default app;
